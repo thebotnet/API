@@ -3,7 +3,6 @@ class API
 {
     private $json;
     private $userIP;
-	private $data;
     
     function __construct()
     {
@@ -11,11 +10,11 @@ class API
             $_SERVER['REMOTE_ADDR'] = $_SERVER['HTTP_CF_CONNECTING_IP'];
         }
         
-		$this->userIP = $_SERVER['REMOTE_ADDR'];
-        $this->data = file_get_contents("http://thebot.net/api/post.php?json&legacy=0&ip=" . $this->userIP);
-		if (strpos($this->data, 'log in on TBN and try again') !== false) {
-			return;
-		}
+        $this->userIP = $_SERVER['REMOTE_ADDR'];
+        $data         = file_get_contents("http://thebot.net/api/post.php?json&legacy=0&ip=" . $this->userIP);
+        if (strpos($data, 'log in on TBN and try again') !== false) {
+            return;
+        }
         $this->json = json_decode($this->data, true);
     }
     
