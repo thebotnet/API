@@ -13,7 +13,7 @@ import json
 class Tbn():
 
     # Autorun is just a way to call the getData() at load time
-    def __init__(self, json_output=True, legacy_mode=False, headers=None):
+    def __init__(self, json_output=True, legacy_mode=False, by_ip=False, headers=None):
 
         # an API key should be perfect, both for query and be identified
         self.api_url = "http://thebot.net/api/post.php"
@@ -26,12 +26,13 @@ class Tbn():
             self.api_url += "?json"
         if not legacy_mode:
             self.api_url += "&legacy=0"
-        self.api_url += "&ip=" + self.get_ip()
-
-        self.r = requests.get(self.api_url, headers=self.headers)
-        self.login_again = "log in on TBN and try again"
+        if by_ip:
+            self.user_ip = self.get_ip()
+            self.api_url += "&ip=" + self.user_ip
 
     def query(self):
+        self.r = requests.get(self.api_url, headers=self.headers)
+        self.login_again = "log in on TBN and try again"
         if self.r.status_code == 200:
             if self.login_again not in self.r.headers:
                 if self.json_output:
